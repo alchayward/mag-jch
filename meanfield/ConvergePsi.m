@@ -41,7 +41,7 @@ function [ psi0 max_diff, err] = ConvergePsi(psi0, f_Psi, varargin)
 
    if graph_it
      %  hline=plot(abs(psi0));
-      hline=imagesc(angle(reshape(psi0, lattice_dims(1),...
+      hline=imagesc(abs(reshape(psi0, lattice_dims(1),...
           lattice_dims(2))));
       shading flat;
       colorbar
@@ -58,7 +58,7 @@ function [ psi0 max_diff, err] = ConvergePsi(psi0, f_Psi, varargin)
         max_diff = max(abs(psiDiff));%/max(abs(psi));
 
         if graph_it
-            set(hline,'CData',angle(reshape(psi,lattice_dims(1),...
+            set(hline,'CData',abs(reshape(psi,lattice_dims(1),...
                 lattice_dims(2))));  %# Update the y data of the line
             xlabel(['diff = ' , num2str(max_diff)])
             ylabel(num2str(ii))

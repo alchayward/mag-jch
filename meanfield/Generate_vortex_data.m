@@ -22,7 +22,7 @@ alpha = [alpha_p,alpha_q];
 jcmf = meanfield_lattice_init(lattice_dims,alpha);
 [ Psi1,diff,err ] = jch_lattice_meanfield(kappa,jcmf,jc,opts);
 
-vortex_data = struct('Psi',Psi1,'alpha',alpha,...
+vortex_data = struct('Psi',Psi1,'lattice_dims',lattice_dims,'alpha',alpha,...
     'mu',mu,'delta',delta,'diff',diff,'err',err); %#ok<NASGU>
 
 save('./saves/vortex_1.mat','vortex_data');
@@ -37,7 +37,7 @@ jcmf = meanfield_lattice_init(lattice_dims,alpha);
 [ Psi64,diff,err ] = jch_lattice_meanfield(kappa,jcmf,jc,opts);
 
 vortex_data = struct('Psi',Psi64,'alpha',alpha,...
-    'mu',mu,'delta',delta,'diff',diff,'err',err);
+    'mu',mu,'lattice_dims',lattice_dims,'delta',delta,'diff',diff,'err',err);
 
 save('./saves/vortex_64.mat','vortex_data');
 figure(2)

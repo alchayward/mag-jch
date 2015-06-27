@@ -6,19 +6,24 @@ opts = struct();
 opts.mod_psi = 0.6;
 opts.max_iter = 100000;
 alpha_range = [0,0.5]; % Only do half the range, because otherhalf is equal
-alpha_points = 100;
-alpha_p_list = linspace(alpha_range(1),alpha_range(2),alpha_points);
+alpha_points = 10;
+alpha_p_list = 0:1:100;
+
+lattice_dims = [10,10];
 
 kappa_range = [0,0.1];
 kappa_points = 100;
 kappa_list = linspace(kappa_range(1),kappa_range(2),kappa_points);
 
 
-lattice_dims = [10,10];
-psi = alpha_kappa_vs_psi(alpha_p_list,kappa_list,lattice_dims,delta,mu)
 
-[M0, k_trans, k_max] = mu_kappa_vs_psi(mu_list,kappa_list,...
-            alpha,lattice_dim,delta,opts);
-save('./saves/mu_kappa_psi_0','M0');
+ [ psi,k_trans,k_max,diff_mat,err_mat] =...
+  %   alpha_kappa_vs_psi(alpha_p_list,kappa_list,lattice_dims,delta,mu,opts);
+alpha_kappa_psi_data = struct('psi',psi,'alpha_list',alpha_p_list,...
+    'kappa_list',kappa_list,'mu',mu,'delta',delta,...
+    'trans_list',k_trans,'max_list',k_max,...
+    'diff_mat',diff_mat,'err_mat',err_mat);
+
+save('./saves/alpha_kappa_psi_tip','alpha_kappa_psi_data');
 figure(1)
-plot_mu_kappa_vs_psi(M0,mu_list,kappa_list,k_trans,k_max)
+plot_mu_kappa_vs_psi(psi,alpha_p_list,kappa_list)
