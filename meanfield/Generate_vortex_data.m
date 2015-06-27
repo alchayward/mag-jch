@@ -27,7 +27,7 @@ vortex_data = struct('Psi',Psi1,'alpha',alpha,...
 
 save('./saves/vortex_1.mat','vortex_data');
 figure(1)
-psiPlot(Psi1,lattice_dims);
+plotPsi(Psi1,lattice_dims);
 
 %Single Vortex
 
@@ -41,4 +41,4 @@ vortex_data = struct('Psi',Psi64,'alpha',alpha,...
 
 save('./saves/vortex_64.mat','vortex_data');
 figure(2)
-psiPlot(Psi64,lattice_dims);
+plotPsi(Psi64,lattice_dims);
