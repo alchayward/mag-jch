@@ -48,7 +48,7 @@ mu_kappa_psi_data= struct('psi',M6,'mu_list',mu_list,'kappa_list',...
     'diff_mat',diff_mat,'err_mat',err_mat);
 save('./saves/mu_kappa_psi_6','mu_kappa_psi_data');
 figure(3)
-plot_mu_kappa_vs_psi(M5,mu_list,kappa_list,k_trans,k_max)
+plot_mu_kappa_vs_psi(M6,mu_list,kappa_list,k_trans,k_max)
 
 %ALPHA = 0.9
 alpha = [9,10];
@@ -60,7 +60,7 @@ mu_kappa_psi_data= struct('psi',M9,'mu_list',mu_list,'kappa_list',...
     'diff_mat',diff_mat,'err_mat',err_mat);
 save('./saves/mu_kappa_psi_9','mu_kappa_psi_data');
 figure(4)
-plot_mu_kappa_vs_psi(M5,mu_list,kappa_list,k_trans,k_max)
+plot_mu_kappa_vs_psi(M9,mu_list,kappa_list,k_trans,k_max)
 
 M_diff = M5-M3;
 figure(5)
