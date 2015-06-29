@@ -46,7 +46,16 @@ accuracy = 10^-8;
 
 
 a = f_psi(accuracy)/accuracy;
-e = max(abs(eigs(amat)));
+
+%This seems to fail sometimes. Can reduce min error. or catch exceptions
+opts = struct('v0',jcmf.psi0);
+try
+    e = max(abs(eigs(amat,1,'lm',opts)));
+catch ME
+    opts.tol = 10^-4;
+    e = max(abs(eigs(amat,1,'lm',opts)));
+end
+
 kappa = 1/(e*a);
 
 end
