@@ -17,6 +17,12 @@ function [ psi_list,transition_kappa,max_kappa, diff_list, err_list ] =...
     end
     mott_kappa = opts.mott_kappa;
     
+    if ~isfield(opts,'psi0')
+        opts.psi0 = jcmf.MakePsi0;
+    end
+    %mott_kappa = opts.mott_kappa;
+    
+    
     psi_list = kappa_list*0;
     diff_list = kappa_list*0;
     err_list = kappa_list*0;
@@ -26,16 +32,17 @@ function [ psi_list,transition_kappa,max_kappa, diff_list, err_list ] =...
     for jj = 1:length(kappa_list)
         kappa = kappa_list(jj);
         if kappa > max_kappa && divirge_kappa
-            Psi = NaN;
+            psi = NaN;
         elseif kappa < transition_kappa && mott_kappa
-            Psi = 0;
+            psi = 0;
         else
             [Psi,diff_list(jj),err_list] = jch_lattice_meanfield(...
                 kappa,jcmf,jc,opts);
+            psi = max(abs(Psi));
         end
-        psi_list(jj) = max(abs(Psi));
+        psi_list(jj) = psi;
         if max(abs(Psi)) > 10^-8
-            jcmf.psi0 = Psi; % Use previous value to initate.
+            opts.psi0 = Psi; % Use previous value to initate.
         end
     end
 
