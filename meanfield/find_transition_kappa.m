@@ -53,7 +53,11 @@ try
     e = max(abs(eigs(amat,1,'lm',opts)));
 catch ME
     opts.tol = 10^-4;
-    e = max(abs(eigs(amat,1,'lm',opts)));
+    try 
+        e = max(abs(eigs(amat,1,'lm',opts)));
+    catch ME2
+        e = 4;
+    end
 end
 
 kappa = 1/(e*a);
