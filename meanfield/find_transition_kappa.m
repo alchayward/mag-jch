@@ -4,7 +4,8 @@ function [ kappa ] = find_transition_kappa(varargin)
 
 if nargin == 2
     f_psi = varargin{1};
-    amat = varargin{2};
+    jcmf = varargin{2};
+    amat = jcmf.amat;
 elseif nargin == 1
     %Take a structure with all the parameters (mu,alpha_p,alpha_q,delta)
     params = varargin{1};

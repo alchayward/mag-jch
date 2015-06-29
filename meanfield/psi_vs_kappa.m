@@ -21,7 +21,7 @@ function [ psi_list,transition_kappa,max_kappa, diff_list, err_list ] =...
     diff_list = kappa_list*0;
     err_list = kappa_list*0;
     
-    transition_kappa = find_transition_kappa(jc.f_psi,jcmf.amat);
+    transition_kappa = find_transition_kappa(jc.f_psi,jcmf);
     max_kappa = -jc.onsiteStrength.mu/4;
     for jj = 1:length(kappa_list)
         kappa = kappa_list(jj);
