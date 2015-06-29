@@ -62,6 +62,6 @@ save('./saves/mu_kappa_psi_9','mu_kappa_psi_data');
 figure(4)
 plot_mu_kappa_vs_psi(M9,mu_list,kappa_list,k_trans,k_max)
 
-M_diff = M5-M3;
+M_diff = M6-M3;
 figure(5)
 plot_mu_kappa_vs_psi(M_diff,mu_list,kappa_list);

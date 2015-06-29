@@ -19,7 +19,7 @@ kappa_max = alpha_p_list*0;
 diff_mat = psi*0;
 err_mat = psi*0;
 
-matlabpool(4)
+parpool(4)
 for ii = 1:length(alpha_p_list)
     alpha = [alpha_p_list(ii),alpha_q];
     jcmf = meanfield_lattice_init(lattice_dims,alpha);
@@ -29,5 +29,5 @@ for ii = 1:length(alpha_p_list)
     psi_vs_kappa(kappa_list,jcmf,jc,opts);
     
 end
-matlabpool close
+parpool close
 end
