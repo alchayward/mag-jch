@@ -1,29 +1,25 @@
-classdef jchmf < Latticesystem
+classdef jchmf
     %UNTITLED4 Summary of this class goes here
     %   Detailed explanation goes here
     
     properties
-
-        dim
+        lattice_dims
+        n_sites
         amat
         psi0
+        alpha
+        coords
     end
     
     methods
    
     function obj = jchmf(para)
-        para.nParticles=1;
-        para.hoppingStrength=1;
-        para.A = [-1,0];
-        para.maxParticlesPerSite=1;
-        para.sysPath='./vorticies/';
-        para.twist = 0*[pi/2,pi/6];
-
-        obj = obj@Latticesystem(para); 
-
-        obj.nSites=obj.NumberOfSites;
-        obj.sitePositions=obj.MakeSitePositions;
-        obj.amat = obj.MakeAdjacencyMatrix;
+        obj.lattice_dims = para.lattice_dims;
+        obj.alpha = para.alpha(1)/para.alpha(2);
+        obj.n_sites=prod(obj.lattice_dims);
+        [obj.amat,obj.coords] =...
+            magnetic_lattice_hamiltonian(obj.lattice_dims,objs.alpha);
+        obj.psi0 = obj.MakePsi0();
     end
         
    
@@ -31,10 +27,10 @@ classdef jchmf < Latticesystem
    function psi = MakePsi0(obj)
         %[v,~]  = eigs((obj.amat),1,'sr');
         %psi = v(:,1);
-        psi = zeros(1,obj.nSites);
+        psi = zeros(obj.n_sites,1);
         alpha = obj.alpha;
-        for ii =1:obj.nSites
-            X  = obj.sitePositions(ii,:);
+        for ii =1:obj.n_sites
+            X  = obj.coords(:,ii);
             psi(ii) = LatticeSolution(alpha,...
                 [1/sqrt(alpha),1/sqrt(alpha)],1i+0.5,X(1)+1i*X(2));
         end
@@ -42,20 +38,7 @@ classdef jchmf < Latticesystem
         %psi = rand(length(psi),1);
     end
 
-   function tm = MakeTrapMat(obj)
-        centre = (obj.latticeDim + 1)/2;
-        tm = diag(sum((obj.sitePositions-ones(obj.nSites,1)*centre).^2,2));
-   end
-
-   function a = MakeAdjacencyMatrix(obj)
-       %[mx, my] = MakeHardAdjacencyMatrices(obj);
-       %[mtx, mty] = MakeWrapAdjacencyMatrices(obj);
-       %a = -(mx + my + mtx + mty);
-       %a=a+a';
-       %alpha_div = alpha(1)/alpha(2);
-       a = magnetic_lattice_hamiltonian(obj.latticeDim,obj.alpha);
-   end
-   end
+end
    
     methods(Static)
 
