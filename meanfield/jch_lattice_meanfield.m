@@ -8,7 +8,7 @@ function [ psi,diff,err ] = jch_lattice_meanfield(kappa,jcmf,jc,varargin)
     end
     
     f_psi_kappa = @(x)jc.f_psi(kappa*jcmf.amat*x);
-    opts.lattice_dims = jcmf.latticeDim;
+    opts.lattice_dims = jcmf.lattice_dims;
     
     if ~isfield(opts,'psi0')
         opts.psi0 = rand(prod(jcmf.lattice_dims),1)*10^-6;

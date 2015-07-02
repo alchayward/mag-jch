@@ -18,7 +18,7 @@ classdef jchmf
         obj.alpha = para.alpha(1)/para.alpha(2);
         obj.n_sites=prod(obj.lattice_dims);
         [obj.amat,obj.coords] =...
-            magnetic_lattice_hamiltonian(obj.lattice_dims,objs.alpha);
+            magnetic_lattice_hamiltonian(obj.lattice_dims,obj.alpha);
         obj.psi0 = obj.MakePsi0();
     end
         
@@ -34,7 +34,6 @@ classdef jchmf
             psi(ii) = LatticeSolution(alpha,...
                 [1/sqrt(alpha),1/sqrt(alpha)],1i+0.5,X(1)+1i*X(2));
         end
-        psi = psi';
         %psi = rand(length(psi),1);
     end
 

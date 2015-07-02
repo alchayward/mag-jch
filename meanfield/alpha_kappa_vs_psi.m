@@ -17,19 +17,14 @@ kappa_max = alpha_p_list*0;
 jc = meanfield_onsite_init(mu,delta);
 alpha_q = prod(lattice_dims);
 
-
-
-parpool(2)
+matlabpool('open')
 parfor ii = 1:length(alpha_p_list)
     alpha = [alpha_p_list(ii),alpha_q];
     jcmf = meanfield_lattice_init(lattice_dims,alpha);
-
     fprintf('alpha = %d\n',alpha(1)/alpha(2))
     %[psi(ii,:), kappa_t(ii),kappa_max(ii),diff_mat(ii,:),err_mat(ii,:)]=...
-    [psi(ii,:), kappa_t(ii),kappa_max(ii)]=...
-    %psi_vs_kappa(kappa_list,jcmf,jc,opts);
-    %psi(ii,:) =... 
+    [psi(ii,:), kappa_t(ii),kappa_max(ii)]=... 
     psi_vs_kappa(kappa_list,jcmf,jc,opts);
 end
-parpool close
+matlabpool close
 end
