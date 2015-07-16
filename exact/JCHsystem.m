@@ -324,11 +324,12 @@ classdef JCHsystem < Latticesystem
         
         function fac = jchangle(obj,beta,delta,kappa)
        
-                  n=round(abs(obj.alpha)*prod(obj.latticeDim));
-                  e=HarperMin(prod(obj.latticeDim));
+                  
                   if obj.alpha ==1 || obj.alpha == 0
                       k = -4;
                   else
+                    n=round(abs(obj.alpha)*prod(obj.latticeDim));
+                    e=HarperMin(prod(obj.latticeDim));
                     k=e(n,2);
                   end
                   ssite=[0,beta;...
@@ -387,7 +388,7 @@ classdef JCHsystem < Latticesystem
                     kappa = params.kappa;
                 end
             end
-
+            np =obj.nParticles;
             ang = obj.jchangle(beta,delta,kappa);
             %ss is the total number of atomic excitations for each dim.
             ss =sum(obj.siteOccupationList(dims,np+1:2*np),2);
@@ -406,18 +407,18 @@ classdef JCHsystem < Latticesystem
                 end
             end
             facs = obj.atomic_state_factor(1:obj.hilbDim,params);
-            
+            np = obj.nParticles;
             Z = reshape(...
-                obj.sitePositions(obj.siteOccupationList',1)+...
-                obj.sitePositions(obj.siteOccupationList',2)*1i,...
-                obj.nParticles,obj.hilbDim).';
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',1)+...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
+                np,obj.hilbDim).';
             
             q = 2;
-            lattice_dims = obj.lattice_dims;
+            lattice_dims = obj.latticeDim;
             
             psiL = zeros(obj.hilbDim,2);
-            psiL(ii,1) = facs.*laughlin(Z,lattice_dims,1,twist,q);
-            psiL(ii,2) = facs.*laughlin(Z,lattice_dims,2,twist,q);
+            psiL(:,1) = facs.*laughlin(Z,lattice_dims,1,twist,q);
+            psiL(:,2) = facs.*laughlin(Z,lattice_dims,2,twist,q);
 
             h = HubbardLibrary();
             psiL = h.GramSchmit(psiL);

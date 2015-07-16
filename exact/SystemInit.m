@@ -4,8 +4,8 @@ model = 'JCH';
 maxParticlesPerSite = 4;
 nParticles = 4;
 nAtoms=1;
-alpha = [4 36];
-onsiteStrength = [1,0];
+alpha = [8 36];
+onsiteStrength = [1,-10];
 hoppingStrength = 1;
 ddStrength = 0;
 twist = [0 0];
@@ -23,4 +23,4 @@ sysParams=struct('model',model,'dim',latticeDim,'nParticles',nParticles,...
     'A',[-1,0],'sysPath',sysPath);
     
 h=HubbardLibrary;
-sb1=h.Lattice(sysParams);
+sb2=h.Lattice(sysParams);

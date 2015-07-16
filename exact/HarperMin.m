@@ -3,17 +3,17 @@ function list = HarperMin( p,q )
 %   Detailed explanation goes here
 
 
-cl=makemf([p,1],0);
+lattice_dims = [p,p];
 
 if nargin == 2
-    cl.alpha=(q)/p;
-    A=cl.MakeAdjacencyMatrix;
+    alpha=(q)/p;
+    A=magnetic_lattice_hamiltonian(lattice_dims, alpha);
     list=min(eig(full(A)));
 else
     list=zeros(p-1,2);
     for ii=1:p-1
-        cl.alpha=(ii)/p;
-        A=cl.MakeAdjacencyMatrix;
+        alpha=(ii)/p;
+        A=magnetic_lattice_hamiltonian(lattice_dims, alpha);
         list(ii,:)=[ii/p,min(eig(full(A)))];
     end
 end
