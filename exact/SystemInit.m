@@ -1,11 +1,11 @@
 
 latticeDim = [6 6];
-model = 'JCH';
-maxParticlesPerSite = 4;
-nParticles = 2;
+model = 'BH';
+maxParticlesPerSite = 2;
+nParticles = 4;
 nAtoms=1;
 alpha = [4 36];
-onsiteStrength = [1,-10];
+onsiteStrength = [0,0];
 hoppingStrength = 1;
 ddStrength = 0;
 twist = [0 0];

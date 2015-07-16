@@ -273,25 +273,38 @@ classdef BHsystem < Latticesystem
      end
     
      
-    function psiL = LaughlinState(obj)
-        %This is way slower then it needs to be.
+    function psiL = WavefunctionState(obj,varargin)
+       
         
-        dim = obj.latticeDim;
-        twist = obj.tangle;
-        alpha = obj.alpha;
-       % pos = obj.siteOccupationList(:,1)
-        pos = arrayfun(@(ii)obj.SingleParticlePositions(ii),...
-            1:obj.hilbDim,'UniformOutput', false);
-        
-        l_fun = @(p)laughlin(pos,dim,2,alpha,p,twist);
-        psiL = zeros(obj.hilbDim,2);
-        psiL(:,1) = l_fun(0);
-        psiL(:,2) = l_fun(1);
+            params = struct();
+            twist = obj.tangle;
+            wf_type = 'laughlin';
+            if nargin > 1
+                params = varargin{1};
+                if isfield(params,'twist')
+                    twist = params.twist;
+                end
+                if isfield(params,'wf_type')
+                    wf_type = params.wf_type;
+                end
+            end
 
-        %Normalize
-        psiL(:,1) = psiL(:,1)/sqrt((psiL(:,1)'*psiL(:,1)));
-        psiL(:,2) = psiL(:,2)/sqrt((psiL(:,2)'*psiL(:,2)));
+            Z = reshape(...
+                obj.sitePositions(obj.siteOccupationList',1)+...
+                obj.sitePositions(obj.siteOccupationList',2)*1i,...
+                np,obj.hilbDim).';
+            
+            lattice_dims = obj.latticeDim;
+            
+            psiL = zeros(obj.hilbDim,2);
+            wf = Wavefunctions(wf_type);
+            
+            psiL(:,1) = facs.*wf(Z,lattice_dims,1,twist);
+            psiL(:,2) = facs.*wf(Z,lattice_dims,2,twist);
 
+            h = HubbardLibrary();
+            psiL = h.GramSchmit(psiL);
+       
     end
      
     end %methods

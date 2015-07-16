@@ -4,6 +4,7 @@ function h = Wavefunctions(varargin)
 %              
 
 if nargin == 0
+h.Pfaffian_L = @Pfaffian_L;
 h.Pfaffian = @Pfaffian;
 h.Laughlin = @Laughlin;
 h.landau_ln = @landau_ln;
@@ -19,6 +20,7 @@ h.find_degeneracy = @find_degeneracy;
 h.find_magnetic_length = @find_magnetic_length;
 h.landau_level_ln = @landau_level_ln;
 h.Laughlin = @Laughlin;
+h.test_boundary_conditions = @test_boundary_conditions;
 elseif nargin == 1
     wf_type = varargin{1};
     switch wf_type
@@ -30,6 +32,22 @@ elseif nargin == 1
 end
 end
 
+function Psi = Subspace(wf_type,Z,lattice_dims,varargin)
+
+    switch wf_type
+        case 'laughlin'
+            wf = @Laughlin;
+            dims = 2;
+        case 'pfaffian'
+            wf = @Pfaffian;
+            dims = 3;
+    end
+    
+    cellfun(wf(Z,lattice_dims,
+    
+    
+        
+end
 function F = pfaffian_rel_ln(Z,Lx,tau,l,q)
 n_particles = size(Z,2);
 
@@ -249,4 +267,71 @@ q=1;
 F = exp(centre_of_mass_ln(Z,lattice_dims,n_flux,twist,l,tau)+...
     landau_level_ln(Z,lattice_dims,n_flux) +...
     pfaffian_rel_ln(Z,Lx,tau,l,q));
+end
+
+
+function F = Pfaffian_L(Z,lattice_dims,varargin)
+if iscell(Z)
+    Z = cell2mat(Z).';
+end
+
+l  = 0;
+if nargin > 2
+    l = varargin{1};
+end
+
+twist  = [0,0];
+if nargin > 3
+    twist = varargin{2};
+end
+
+if l == 0
+    l1 = 0;
+    l2 = 0;
+    %twist = twist + [0,pi];
+elseif l == 1
+    l1 = 1;
+    l2 = 1;
+    %twist = twist + [pi,pi];
+elseif l == 2
+    l1 = 1;
+    l2 = 0;
+    twist = twist + [0,pi];
+end
+
+%Lx = lattice_dims(1);
+%tau = 1i*lattice_dims(2)/Lx;
+n_particles = size(Z,2);
+%n_flux = n_particles;
+%q=1;
+
+v = perms(1:n_particles);
+
+v1 = v(:,1:n_particles/2);
+v2 = v(:,n_particles/2+1:n_particles);
+hilbdim = size(Z,1); %it's not really hilb dim, but you know...
+F = zeros(hilbdim,1);
+
+n_perms = size(v,1);
+for ii = 1:n_perms
+    F = F + Laughlin(Z(:,v1(ii)),lattice_dims,l1,twist).*...
+        Laughlin(Z(:,v2(ii)),lattice_dims,l2,twist);
+end
+
+end
+
+function err = test_boundary_conditions(...
+                    z,lattice_dims,twist,n_flux,wf)
+   Lx =  lattice_dims(1);
+   tau = 1i*lattice_dims(2)/Lx;
+   Sy = exp(-2i*pi*n_flux*(real(sum(z))/Lx)+1i*twist(2));
+   Sx = exp(1i*twist(1));
+   
+   wf0 = wf(z);
+   zx = z;
+   zx(1) = zx(1)+Lx;
+   zy = z;
+   zy(1) = zy(1) + tau*Lx;
+   
+   err = [wf(zx)/(wf0*Sx),wf(zy)/(wf0*Sy)];
 end
