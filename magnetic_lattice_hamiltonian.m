@@ -65,8 +65,8 @@ for ii = 1:dim
         jj = coords_ind(Y(1)+1,Y(2)+1);
         phase = dx.'*(A_func(X));
         if wrap && is_torus
-            bc = dx'*(PBC-Mag_BC(X));
-            phase = phase + bc;
+            boundary_conditions = dx'*(PBC-Mag_BC(X));
+            phase = phase + boundary_conditions;
         end
         T(ii,jj) = exp(-1i*phase);
     end

@@ -4,6 +4,9 @@ function [ TX, TY ] = magnetic_lattice_hamiltonian_XY(...
 %   Detailed explanation goes here
 %This only works when A_func is linear!!!!
 
+%%%This should be cominded with magnetic_lattice_hamiltonian and 
+%%%Diffirenitated through inouts and outputs.
+
 lattice_dims = reshape(lattice_dims,2,1);
 shift_vec = [0;0];
 X_wrap = @(X)[mod(X(1),lattice_dims(1));mod(X(2),lattice_dims(2))] + ...
