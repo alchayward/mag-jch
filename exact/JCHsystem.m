@@ -393,7 +393,7 @@ classdef JCHsystem < Latticesystem
             %ss is the total number of atomic excitations for each dim.
             ss =sum(obj.siteOccupationList(dims,np+1:2*np),2);
             %a factor to multiply each state by. 
-            factors = (ang(1).^ss).*(ang(2).^(np-ss));
+            factors = (ang(2).^ss).*(ang(1).^(np-ss));
         end
         
         function psiL = LaughlinState(obj,varargin)
@@ -413,12 +413,12 @@ classdef JCHsystem < Latticesystem
                 obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
                 np,obj.hilbDim).';
             
-            q = 2;
             lattice_dims = obj.latticeDim;
             
             psiL = zeros(obj.hilbDim,2);
-            psiL(:,1) = facs.*laughlin(Z,lattice_dims,1,twist,q);
-            psiL(:,2) = facs.*laughlin(Z,lattice_dims,2,twist,q);
+            wf = Wavefunctions('laughlin');
+            psiL(:,1) = facs.*wf(Z,lattice_dims,1,twist);
+            psiL(:,2) = facs.*wf(Z,lattice_dims,2,twist);
 
             h = HubbardLibrary();
             psiL = h.GramSchmit(psiL);

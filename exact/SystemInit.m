@@ -2,9 +2,9 @@
 latticeDim = [6 6];
 model = 'JCH';
 maxParticlesPerSite = 4;
-nParticles = 4;
+nParticles = 2;
 nAtoms=1;
-alpha = [8 36];
+alpha = [4 36];
 onsiteStrength = [1,-10];
 hoppingStrength = 1;
 ddStrength = 0;

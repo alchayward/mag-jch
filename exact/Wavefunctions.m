@@ -1,7 +1,9 @@
-function h = Wavefunctions()
+function h = Wavefunctions(varargin)
 %HubbardLibrary: Library of functions for Hubbard Model Calculation
 %   Functions: Chern(systemParameters, chernParameters)
 %              
+
+if nargin == 0
 h.Pfaffian = @Pfaffian;
 h.Laughlin = @Laughlin;
 h.landau_ln = @landau_ln;
@@ -17,6 +19,15 @@ h.find_degeneracy = @find_degeneracy;
 h.find_magnetic_length = @find_magnetic_length;
 h.landau_level_ln = @landau_level_ln;
 h.Laughlin = @Laughlin;
+elseif nargin == 1
+    wf_type = varargin{1};
+    switch wf_type
+        case 'laughlin'
+            h = @Laughlin;
+        case 'pfaffian'
+            h = @Pfaffian;
+    end
+end
 end
 
 function F = pfaffian_rel_ln(Z,Lx,tau,l,q)
@@ -133,6 +144,8 @@ for ii = 1:n_pairings
     F_rel_ln = F_rel_ln + q*thetaln(Z_diffs(:,ii)/Lx,tau,1);
 end
 
+end
+
 function pairings = laughlin_pairs(n_particles)
 n_pairings = n_particles*(n_particles-1)/2;
 pairings = zeros(n_pairings,2);
@@ -142,6 +155,8 @@ for ii = 1:n_particles-1
         pairings(ind,:) = [ii,jj];
         ind = ind + 1;
     end
+end
+
 end
 
 function F = Laughlin(Z,lattice_dims,varargin)

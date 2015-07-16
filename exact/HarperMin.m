@@ -3,7 +3,7 @@ function list = HarperMin( p,q )
 %   Detailed explanation goes here
 
 
-lattice_dims = [p,p];
+lattice_dims = [p,3];
 
 if nargin == 2
     alpha=(q)/p;
