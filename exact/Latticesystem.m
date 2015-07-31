@@ -10,8 +10,8 @@ classdef Latticesystem
     A;
     tangle = [0,0];
     nParticles=1;
-    hilbDim;
-    latticeDim = [4,4];
+    hilb_dim;
+    lattice_dim = [4,4];
     mat
     nSites = 1;
     sitePositions
@@ -29,21 +29,12 @@ classdef Latticesystem
     %Lattice Properties
 
         %Presently this code only handles the square lattice geometery.
-
-        
-
         
         %Single Particle Adjacency Matrtrix
         %it is nessasary to store seperate X and Y adjacency matricies, as well
         %as X and Y tunneling matricies to make changing the twist angles
         %easier. These are stored as 3-tuples (i,j,c-number)
 
-        
-
-
-        
-    
-    
     %Operators
         %Operators, like the Jaynes-Cummings interaction, and hopping matrix,
         %are stored as sparse matricies, and only with their upper right
@@ -63,7 +54,7 @@ classdef Latticesystem
         %Constructor
      function obj = Latticesystem(para)
             if nargin > 0
-                    obj.latticeDim = para.dim;
+                    obj.lattice_dim = para.lattice_dim;
                     obj.nParticles = para.nParticles;
                     obj.alphap=para.alpha(1);
                     obj.alphaq=para.alpha(2);
@@ -106,13 +97,13 @@ classdef Latticesystem
             
             sitepos= zeros(obj.nSites,2);
             [sitepos(:,1),sitepos(:,2)] = ... 
-            ind2sub(obj.latticeDim,1:obj.nSites);
+            ind2sub(obj.lattice_dim,1:obj.nSites);
             sitepos(:,1)=sitepos(:,1)-1;
             sitepos(:,2)=sitepos(:,2)-1;
         end  
                       
         function n = NumberOfSites(obj)
-           n = obj.latticeDim(1) * obj.latticeDim(2);
+           n = obj.lattice_dim(1) * obj.lattice_dim(2);
         end
 
         function [mx,my] = MakeHardAdjacencyMatrices(obj)
@@ -126,8 +117,8 @@ classdef Latticesystem
             %conditions.
 
             %dimensios of lattice
-            mx = zeros((obj.latticeDim(1)-1)*obj.latticeDim(2),3);
-            my = zeros((obj.latticeDim(2)-1)*obj.latticeDim(1),3);
+            mx = zeros((obj.lattice_dim(1)-1)*obj.lattice_dim(2),3);
+            my = zeros((obj.lattice_dim(2)-1)*obj.lattice_dim(1),3);
             %Make the X matrix
             %The hopping is from j to i
             pon=obj.pot;
@@ -188,8 +179,8 @@ classdef Latticesystem
             %conditions.
 
             
-            mx = zeros(obj.latticeDim(2),3);
-            my = zeros(obj.latticeDim(1),3);
+            mx = zeros(obj.lattice_dim(2),3);
+            my = zeros(obj.lattice_dim(1),3);
             pon=obj.pot;
             poff=1-obj.pot;
             
@@ -201,12 +192,12 @@ classdef Latticesystem
              for ii = 1:(obj.nSites)
                for jj = 1:(obj.nSites)
                   if ((obj.sitePositions(ii,1) == 0) && ... 
-                      (obj.sitePositions(jj,1) == (obj.latticeDim(1)-1))...
+                      (obj.sitePositions(jj,1) == (obj.lattice_dim(1)-1))...
                       && (obj.sitePositions(ii,2) == obj.sitePositions(jj,2)))
                       
                   phase = obj.tangle(1)*(pon*obj.sitePositions(ii,1) + poff)+...
                     2*pi*obj.alpha*obj.sitePositions(ii,2)*...
-                        (obj.A(1) + 0*obj.latticeDim(1));
+                        (obj.A(1) + 0*obj.lattice_dim(1));
 
                         mx(incr,:) = [ii,jj,exp(-1i*phase)];
                         incr = incr + 1;
@@ -222,17 +213,17 @@ classdef Latticesystem
              for ii = 1:(obj.nSites)
                for jj = 1:(obj.nSites)
                   if ((obj.sitePositions(ii,2) == 0) && ... 
-                      (obj.sitePositions(jj,2) == (obj.latticeDim(2)-1))...
+                      (obj.sitePositions(jj,2) == (obj.lattice_dim(2)-1))...
                       && (obj.sitePositions(ii,1) == obj.sitePositions(jj,1)))
                  
 %                   phase = (obj.tangle(2)...
 %                             +2*pi*obj.alpha*...
-%                         obj.sitePositions(ii,1)*(obj.latticeDim(2)));      
+%                         obj.sitePositions(ii,1)*(obj.lattice_dim(2)));      
                   
                     
                  phase = obj.tangle(2)*(pon*obj.sitePositions(ii,2) + poff)+...
                     2*pi*obj.alpha*obj.sitePositions(ii,1)*...
-                        (obj.A(2) + obj.latticeDim(2));   
+                        (obj.A(2) + obj.lattice_dim(2));   
                     
                         my(incr,:) = [ii,jj,...
                             exp(-1i*phase)];
@@ -308,7 +299,7 @@ classdef Latticesystem
 %%%
 function fileName = GenerateFileName(p)
    fileName=[p.model 'm',num2str(p.maxParticlesPerSite) ...
-        'd' num2str(p.latticeDim(1)) 'x' num2str(p.latticeDim(2)) ...
+        'd' num2str(p.lattice_dim(1)) 'x' num2str(p.lattice_dim(2)) ...
         'n' num2str(p.nParticles) 'p' num2str(p.alphap) ...
         'q' num2str(p.alphaq) '.mat']; 
 end

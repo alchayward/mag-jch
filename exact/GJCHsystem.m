@@ -7,22 +7,9 @@ classdef GJCHsystem < Latticesystem
    % energies=struct('kappa',1,'delta',0,'jc',1);
     angle
     atomLevels = 2;
-   
-        %Operators, like the Jaynes-Cummings interaction, and hopping matrix,
-        %are stored as sparse matricies, and only with their upper right
-        %triangle elements.
-
-    
-        %These lists are Np by Ns matricies, storing the position and number
-        %of photonic and atomic occupations at each site.
-
-    
     end
     
     methods
-    
-        
-        %Constructor
      function obj = GJCHsystem(para)
             
             obj = obj@Latticesystem(para); 
@@ -31,36 +18,23 @@ classdef GJCHsystem < Latticesystem
             end               
             obj.model = 'GJCH';         
      end
-          
      
-     function p = Initilize(p)
-         
-         p.hilbDim = p.MakeHilbDim;
-
+	function p = Initilize(p)
+         p.hilb_dim = p.MakeHilbDim;
          p.siteOccupationList=p.MakeSiteOccupationList;
-         
-         
          p.sym=p.MakeSymMatrix;
     %     p.angle=p.jchangle;
          p.mat.k=p.MakeKappaMatrix;
-         
-          
          p.mat.d = {};
          for ii = 1:(p.atomLevels-1)
             p.mat.d{ii} = p.MakeDeltaMatrix(ii);
          end
-         
-         
-         
          p.mat.jc = {};
          for ii = 1:(p.atomLevels-1)
             p.mat.jc{ii} = p.MakeJCMatrix(ii);
          end
-         
-         
         % [p.mat.d1 p.mat.d2] = p.MakeDeltaMatrix;
         % [p.mat.jc1 p.mat.jc2] = p.MakeJCMatrix;
-         
      end
      
         function h = MakeHamiltonian(obj,varargin)
@@ -75,7 +49,6 @@ classdef GJCHsystem < Latticesystem
                 disp(['ERROR - BHystem:MakeHamiltonian:',...
                     'wrong number of arguments']);
             end
-            
             h= - k*obj.mat.k;
             for ii = 1:(obj.atomLevels-1)
                 h= h + b(ii)*obj.mat.jc{ii} +...
@@ -83,13 +56,6 @@ classdef GJCHsystem < Latticesystem
             end           
         end
 
-        function h = onsite(obj)
-           h = obj.onsitestrength(1)*obj.mat.jc1 +... 
-               obj.onsitestrength(2)*obj.mat.jc2 +...
-               obj.onsitestrength(3)*obj.mat.d1 + ...
-               obj.onsitestrength(4)*obj.mat.d2;
-        end
-        
         function k = hopping(obj)
            k = obj.hoppingstrength(1)*obj.mat.k;
         end
@@ -98,7 +64,7 @@ classdef GJCHsystem < Latticesystem
             d=0;
             np=obj.nParticles;
             p=partitions(np);
-            sites=prod(obj.latticeDim);
+            sites=prod(obj.lattice_dim);
             for ii = 1:size(p,1)
                 pp=p(ii,:);
                 fac=factorial(sum(pp))/prod(factorial(pp));
@@ -113,56 +79,50 @@ classdef GJCHsystem < Latticesystem
             end
         end
         
-        function list = MakeSiteOccupationList(obj)
-
-         N=obj.nParticles;
-         d=obj.nSites;
-         dim = obj.hilbDim;
+        function LIST = MakeSiteOccupationList(obj)
+	%Revisiting this function a year later. I have no f'ing idea how it works.
+	%Please don't break it.
+         np=obj.nParticles;
+         n_sites=obj.nSites;
          at0=obj.atomLevels-1;
          global LIST
-         LIST = zeros(dim,2*N);
+         LIST = zeros(obj.hilb_dim,2*np);
          global II
          II=1;
              
-            function reclist(nn1,dd1,config1,at)
-                if nn1 == 0
-                    LIST(II,:) = config1;
-                    II = II + 1;
-                    II;
-            
+            function reclist(np1,site1,config1,at1)
+		% np1: particles left to place
+		% site1: site that we're up to
+		% config1: the configuration we're up to
+		% at:	the atomic states of the particle we're up to.
+                if np1 == 0 %no more paricles to place
+                    LIST(II,:) = config1; % add a new configurations
+                    II = II + 1; %next configuration
                 else
-                    for jj1 = (dd1):d
-                        config1(N-nn1+1) = jj1;
-                        reclist(nn1-1,jj1,config1,0);
+                    for site = site1:n_sites
+                        config1(np-np1+1) = site;
+                        reclist(np1-1,site,config1,0);
                     end
-
-                    config1(2*N-nn1+1) = 1;
-
-                     for jj1 = (dd1+1):d
-                        config1(N-nn1+1) = jj1;
-                        reclist(nn1-1,jj1,config1,at0-1);
-                     end
-                        
-                    if at ~= 0
-                        config1(N-nn1+1) = dd1;
-                        reclist(nn1-1,dd1,config1,at-1);
+                    config1(2*np-np1+1) = 1;
+                    for site = (site1+1):n_sites
+                        config1(np-np1+1) = site;
+                        reclist(np1-1,site,config1,at0-1);
+                    end
+                    if at1 ~= 0
+                        config1(np-np1+1) = site1;
+                        reclist(np1-1,site1,config1,at1-1);
                     end
                 end
              end
-               
-          reclist(N,1,zeros(2*N,1),at0);
-         
-          list = LIST;
+          reclist(np,1,zeros(2*np,1),at0);
         end
                      
         function sym = MakeSymMatrix(obj)
-  
-            
             %for the JCH model, the basis structure is a little more
             %complicated. But we follow a similar proceedure.
             %The basis for distinguishable particles will be 
             %BoxAoxBoxA....Np times. which will be 2^Np times as large as
-            %the BH hilbDim.
+            %the BH hilb_dim.
             
             len=factorial(obj.nParticles);
             %posm maps a list of particle positions onto a basis index.
@@ -173,7 +133,7 @@ classdef GJCHsystem < Latticesystem
             posma=(2*obj.nSites).^posm;
             
             posm=[posmb';posma']';
-            list=zeros(obj.hilbDim*len,3);
+            list=zeros(obj.hilb_dim*len,3);
             iter=1;
             
             %%% The calls to perms is very expensive, so we do it by hand.
@@ -187,8 +147,7 @@ classdef GJCHsystem < Latticesystem
             v = permlist;
             shiftsites = [-ones(1,obj.nParticles),zeros(1,obj.nParticles)];
             
-            
-            for ii=1:obj.hilbDim
+            for ii=1:obj.hilb_dim
                 oclistii = obj.siteOccupationList(ii,:)+shiftsites;
                 v = oclistii(permlist);
  
@@ -206,13 +165,13 @@ classdef GJCHsystem < Latticesystem
             end
             list=list(1:iter-1,:);
             sym=sparse(list(:,1),list(:,2),list(:,3),...
-            obj.hilbDim,(2*obj.nSites)^obj.nParticles);
+            obj.hilb_dim,(2*obj.nSites)^obj.nParticles);
         end                  
         
         function d = MakeDeltaMatrix(obj,level)
         
         N=obj.nParticles;
-        dim = obj.hilbDim;
+        dim = obj.hilb_dim;
 
         sitelist=obj.siteOccupationList(:,1:N);
         atomlist=logical(obj.siteOccupationList(:,(N+1):2*N));
@@ -231,20 +190,13 @@ classdef GJCHsystem < Latticesystem
         a = sparse(kron(eye(obj.nSites),[0,0;1,0]));
         jc=obj.MakeNParticleMatrix(a);
         [row col val] = find(jc);
-        
-        
         jclist = zeros(length(row),3);
-        
-            
         N=obj.nParticles;
         atoms = N+1:2*N;
         
-        
         for ii=1:length(row)
-        
             diff = logical(obj.siteOccupationList(row(ii),atoms) - ...
                    obj.siteOccupationList(col(ii),atoms));
-               
             
             site = obj.siteOccupationList(row(ii),...
                 diff);
@@ -259,32 +211,23 @@ classdef GJCHsystem < Latticesystem
                 == level
                 jclist(ii,:) = [row(ii),col(ii),val(ii)];
             end
-            
-            
         end
             
-            m = size(jc);
-            
+        m = size(jc);
         jc = sparse(nonzeros(jclist(:,1)),nonzeros(jclist(:,2)),...
             nonzeros(jclist(:,3)),m(1),m(2));
-      
         jc = (jc+jc')/sqrt(level);
-        
         end
               
-        function [tx ty ] = twist(obj,tangle)
+        function [tx ty ] = twist(obj,tangle) %Why?
             obj.tangle=tangle;
             [tx ty] = obj.MakeTwistMatricies;
-            
         end
 
         function li =SingleParticleIndicies(obj,ind)
         
             %for an state space index, return a list of the single particle
             %state indicies.
-            
-            
-            
             occ=obj.siteOccupationList(ind,:);
             pn=obj.nParticles;
             li=zeros(pn,1);
@@ -298,9 +241,6 @@ classdef GJCHsystem < Latticesystem
         
             %for an state space index, return a list of the single particle
             %state indicies.
-            
-            
-            
             occ=obj.siteOccupationList(ind,:);
             pn=obj.nParticles;
             li=zeros(pn,1);
@@ -324,11 +264,11 @@ classdef GJCHsystem < Latticesystem
                     mtx=kron(mtx,b);
                     mty=kron(mty,b);
                 case 'hard'
-                    [ mx my ] = obj.MakeHardAdjacencyMatrices;
+                    [ mx,my ] = obj.MakeHardAdjacencyMatrices;
                     mtx = [];
                     mty = [];
-                    my=kron(mx,b);
-                    mx=kron(my,b);
+                    mx=kron(mx,b);
+                    my=kron(my,b);
              end
                     
         end
@@ -351,8 +291,8 @@ classdef GJCHsystem < Latticesystem
         
         function fac = jchangle(obj)
        
-                  n=round(abs(obj.alpha)*prod(obj.latticeDim));
-                  e=HarperMin(prod(obj.latticeDim));
+                  n=round(abs(obj.alpha)*prod(obj.lattice_dim));
+                  e=HarperMin(prod(obj.lattice_dim));
                   if obj.alpha ==1 || obj.alpha == 0
                       k = -4;
                   else
@@ -360,8 +300,10 @@ classdef GJCHsystem < Latticesystem
                   end
                   % This needs to be modified to accomodate the higher
                   % atomic states. What was the configuration again...
-                  
-                  
+                 %What does the onsite hamiltonian look like?  
+		%Depends on particles number and stuff? No! assume that it is occupied by at most (n_atoms -1) particles. Probably still dependent. equivalent to a two 
+
+			
                   ssite=[0,obj.onsitestrength(1);...
                       obj.onsitestrength(1),obj.onsitestrength(2)-...
                       obj.hoppingstrength*k];
@@ -369,21 +311,70 @@ classdef GJCHsystem < Latticesystem
                   [v ~]=eig(ssite); 
                   fac=v(:,1);
         end
+
+        function factors = atomic_state_factor(obj,dims,varargin)
+            beta = obj.onsiteStrength(1);
+            delta = obj.onsiteStrength(2);
+            kappa = obj.onsiteStrength(1);
+            if nargin > 2
+                params = varargin{1};
+                if isfield(params,'beta')
+                    beta = params.beta;
+                end
+                if isfield(params,'delta')
+                    delta = params.delta;
+                end
+                if isfield(params,'kappa')
+                    kappa = params.kappa;
+                end
+            end
+            np =obj.nParticles;
+            ang = obj.jchangle(beta,delta,kappa);
+            %ss is the total number of atomic excitations for each dim.
+            ss =sum(obj.siteOccupationList(dims,np+1:2*np),2);
+            %a factor to multiply each state by. 
+            factors = (ang(2).^ss).*(ang(1).^(np-ss));
+        end
+
+        function PsiL = PfaffianState(obj,varargin)
+            
+            params = struct();
+            twist = obj.tangle;
+            if nargin > 1
+                params = varargin{1};
+                if isfield(params,'twist')
+                    twist = params.twist;
+                end
+            end
+            facs = obj.atomic_state_factor(1:obj.hilb_dim,params);
+            np = obj.nParticles;
+            Z = reshape(...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',1)+...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
+                np,obj.hilb_dim).';
+            lattice_dims = obj.lattice_dim;
+            
+            wf = Wavefunctions();
+	    PsiL = wf.Subspace('pfaffian',Z,lattice_dims,twist);
+            h = HubbardLibrary();
+            PsiL = h.GramSchmit(PsiL);
+        end
         
         function pro = PNProjector(obj,pn)
+	%Not sure what this does now either
            p=obj.nParticles;
-           pro=zeros(1,obj.hilbDim);
+           pro=zeros(1,obj.hilb_dim);
            if pn ==1
-            for ii = 1:obj.hilbDim
+            for ii = 1:obj.hilb_dim
                if length(unique(nonzeros(obj.siteOccupationList(ii,1:p))))==p
                    pro(ii)=1;
                end
             end
              pro=diag(sparse(pro));
            elseif pn==2
-               pro=sparse(1:obj.hilbDim,1:obj.hilbDim,1)-obj.PNProjector(1);
+               pro=sparse(1:obj.hilb_dim,1:obj.hilb_dim,1)-obj.PNProjector(1);
            elseif pn==3
-           for ii = 1:obj.hilbDim
+           for ii = 1:obj.hilb_dim
                if length(unique(nonzeros(obj.siteOccupationList(ii,1:p))))==1
                    pro(ii)=1;
                    
@@ -391,7 +382,6 @@ classdef GJCHsystem < Latticesystem
            end
            pro=diag(sparse(pro));
            end
-           
            
         end
         
@@ -402,17 +392,17 @@ classdef GJCHsystem < Latticesystem
          e=obj.nParticles*jchhe(1,1,obj.onsitestrength(2),hop,-1);
      end
     
-     function w = MakeOmegaMatrix(obj)
+     function w = MakeOmegaMatrix(obj) %I wish i knew what this did.
         
             N = obj.nParticles;
            atoms = obj.siteOccupationList(:,N+1:2*N);
  
-           plist=zeros(obj.hilbDim,1);
-           for ii =1:obj.hilbDim
+           plist=zeros(obj.hilb_dim,1);
+           for ii =1:obj.hilb_dim
            plist(ii)=nnz(obj.siteOccupationList(atoms(ii,:)));
            end
            [ind val] = find(plist);
-           w=sparse(ind,ind,val,obj.hilbDim,obj.hilbDim);
+           w=sparse(ind,ind,val,obj.hilb_dim,obj.hilb_dim);
      end     
      
      function p = MakePhotonicProjector(obj)
@@ -421,8 +411,8 @@ classdef GJCHsystem < Latticesystem
            atoms = obj.siteOccupationList(:,N+1:2*N);
            photons=obj.siteOccupationList(logical(atoms));
            
-           plist=zeros(obj.hilbDim);
-           for ii =1:obj.hilbDim
+           plist=zeros(obj.hilb_dim);
+           for ii =1:obj.hilb_dim
            plist(ii)=nnz(obj.siteOccupationList(atoms(ii,:)));
            end       
      end
@@ -436,7 +426,7 @@ classdef GJCHsystem < Latticesystem
          
         N=obj.nParticles;
         nSites=obj.nSites;
-        dim = obj.hilbDim;
+        dim = obj.hilb_dim;
        
         sitelist=obj.siteOccupationList(:,1:N);
         atomlist=logical(obj.siteOccupationList(:,(N+1):2*N));
@@ -458,4 +448,3 @@ classdef GJCHsystem < Latticesystem
      
     end %methods   
 end %classdef
-

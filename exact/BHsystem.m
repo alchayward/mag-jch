@@ -90,7 +90,7 @@ classdef BHsystem < Latticesystem
             maxN =obj.maxParticlesPerSite;
             p=partitions(np);
             
-            sites=prod(obj.latticeDim);
+            sites=prod(obj.lattice_dim);
             
             if maxN >= np
                 d = nchoosek(obj.nParticles+obj.nSites -1,obj.nParticles);
@@ -294,7 +294,7 @@ classdef BHsystem < Latticesystem
                 obj.sitePositions(obj.siteOccupationList',2)*1i,...
                 np,obj.hilbDim).';
             
-            lattice_dims = obj.latticeDim;
+            lattice_dims = obj.lattice_dim;
             
             psiL = zeros(obj.hilbDim,2);
             wf = Wavefunctions(wf_type);

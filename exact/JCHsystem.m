@@ -76,7 +76,7 @@ classdef JCHsystem < Latticesystem
             d=0;
             np=obj.nParticles;
             p=partitions(np);
-            sites=prod(obj.latticeDim);
+            sites=prod(obj.lattice_dim);
             for ii = 1:size(p,1)
                 pp=p(ii,:);
                 fac=factorial(sum(pp))/prod(factorial(pp));
@@ -328,8 +328,8 @@ classdef JCHsystem < Latticesystem
                   if obj.alpha ==1 || obj.alpha == 0
                       k = -4;
                   else
-                    n=round(abs(obj.alpha)*prod(obj.latticeDim));
-                    e=HarperMin(prod(obj.latticeDim));
+                    n=round(abs(obj.alpha)*prod(obj.lattice_dim));
+                    e=HarperMin(prod(obj.lattice_dim));
                     k=e(n,2);
                   end
                   ssite=[0,beta;...
@@ -413,7 +413,7 @@ classdef JCHsystem < Latticesystem
                 obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
                 np,obj.hilbDim).';
             
-            lattice_dims = obj.latticeDim;
+            lattice_dims = obj.lattice_dim;
             
             psiL = zeros(obj.hilbDim,2);
             wf = Wavefunctions('laughlin');
