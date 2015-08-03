@@ -26,3 +26,4 @@ p.atomLevels = 3;
     
 h=HubbardLibrary;
 s=h.Lattice(p);
+s = s.Initilize();

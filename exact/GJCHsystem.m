@@ -285,30 +285,22 @@ classdef GJCHsystem < Latticesystem
                   for ii = p 
                     f=f*fac(ii+1);
                   end
-                  
-                  
         end   
         
-        function fac = jchangle(obj)
-       
-                  n=round(abs(obj.alpha)*prod(obj.lattice_dim));
-                  e=HarperMin(prod(obj.lattice_dim));
+        function fac = jchangle(obj,beta,delta,kappa)
+                  
                   if obj.alpha ==1 || obj.alpha == 0
                       k = -4;
                   else
+                    n=round(abs(obj.alpha)*prod(obj.lattice_dim));
+                    e=HarperMin(prod(obj.lattice_dim));
                     k=e(n,2);
                   end
-                  % This needs to be modified to accomodate the higher
-                  % atomic states. What was the configuration again...
-                 %What does the onsite hamiltonian look like?  
-		%Depends on particles number and stuff? No! assume that it is occupied by at most (n_atoms -1) particles. Probably still dependent. equivalent to a two 
-
-			
-                  ssite=[0,obj.onsitestrength(1);...
-                      obj.onsitestrength(1),obj.onsitestrength(2)-...
-                      obj.hoppingstrength*k];
+                  ssite=[0,beta;...
+                      beta,delta-...
+                      kappa*k];
                   
-                  [v ~]=eig(ssite); 
+                  [v,~]=eig(ssite); 
                   fac=v(:,1);
         end
 

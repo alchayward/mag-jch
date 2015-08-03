@@ -323,7 +323,6 @@ classdef JCHsystem < Latticesystem
         end   
         
         function fac = jchangle(obj,beta,delta,kappa)
-       
                   
                   if obj.alpha ==1 || obj.alpha == 0
                       k = -4;

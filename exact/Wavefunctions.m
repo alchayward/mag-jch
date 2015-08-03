@@ -21,6 +21,7 @@ h.find_magnetic_length = @find_magnetic_length;
 h.landau_level_ln = @landau_level_ln;
 h.Laughlin = @Laughlin;
 h.test_boundary_conditions = @test_boundary_conditions;
+h.Subspace = @Subspace;
 elseif nargin == 1
     wf_type = varargin{1};
     switch wf_type
@@ -34,6 +35,11 @@ end
 
 function Psi = Subspace(wf_type,Z,lattice_dims,varargin)
 
+	params = struct();
+	if nargin > 3
+		params = varargin{1};
+	end
+
     switch wf_type
         case 'laughlin'
             wf = @Laughlin;
@@ -41,13 +47,16 @@ function Psi = Subspace(wf_type,Z,lattice_dims,varargin)
         case 'pfaffian'
             wf = @Pfaffian;
             dims = 3;
+        case 'product'
+           % LLL has n_flux states. Product states have n_flux^n_particles
+           % states (approx; sans identical states: (1,2) == (2,1) )
+           %wf = @Product
     end
-    
-    cellfun(wf(Z,lattice_dims,
-    
-    
-        
+    Psi = cell2mat(... % This may have the wrong dimensions. never sure.  
+			cellfun(@(ii)wf(Z,lattice_dims,ii,params),...
+            num2cell(0:dims-1),'UniformOutput',false));
 end
+       
 function F = pfaffian_rel_ln(Z,Lx,tau,l,q)
 n_particles = size(Z,2);
 
