@@ -30,7 +30,7 @@ s2.D = D;
 save('./saves/pfaffbh.mat','s2');
 
 p.model = 'GJCH';
-p.onsiteStrength = [sqrt(2),1,-5,-10]; %This might be the wrong way around
+p.onsiteStrength = [1,sqrt(2),-5,-10]; %This might be the wrong way around
 
 s1=h.Lattice(p);
 s1 = s1.Initilize();
