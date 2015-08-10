@@ -1,12 +1,13 @@
 
 p = struct(); %parameters structers
 p.lattice_dim = [6 6];
-p.model = 'GJCH';
+p.model = 'BH';
 p.maxParticlesPerSite = 4;
 p.nParticles = 4;
 p.nAtoms=1;
 p.alpha = [4 36];
-p.onsiteStrength = [1,sqrt(2),-5,-10];
+p.onsiteStrength = [0,0,10,0];
+%p.onsiteStrength = [1,sqrt(2),-5,-10];
 p.hoppingStrength = 1;
 p.ddStrength = 0;
 p.twist = [0 0];
@@ -25,5 +26,5 @@ p.atomLevels = 3;
 %    'A',[-1,0],'sysPath',sysPath);
     
 h=HubbardLibrary;
-s=h.Lattice(p);
-s = s.Initilize();
+s2=h.Lattice(p);
+s2 = s2.Initilize();

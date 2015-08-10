@@ -53,7 +53,7 @@ function Psi = Subspace(wf_type,Z,lattice_dims,varargin)
            %wf = @Product
     end
     Psi = cell2mat(... % This may have the wrong dimensions. never sure.  
-			cellfun(@(ii)wf(Z,lattice_dims,ii,params),...
+			cellfun(@(ii)wf(Z,lattice_dims,ii),...
             num2cell(0:dims-1),'UniformOutput',false));
 end
        

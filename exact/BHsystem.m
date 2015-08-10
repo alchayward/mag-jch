@@ -9,7 +9,6 @@ classdef BHsystem < Latticesystem
     
     methods
     
-        
         %Constructor
         function obj = BHsystem(para)
             obj = obj@Latticesystem(para); 
@@ -22,7 +21,7 @@ classdef BHsystem < Latticesystem
              obj.model = 'BH';
              
           
-             obj.hilbDim = obj.MakeHilbDim;
+             obj.hilb_dim = obj.Makehilb_dim;
         end
           
         function p = Initilize(p)
@@ -81,7 +80,7 @@ classdef BHsystem < Latticesystem
             
         end
               
-        function d = MakeHilbDim(obj)
+        function d = Makehilb_dim(obj)
             
             
             
@@ -135,9 +134,9 @@ classdef BHsystem < Latticesystem
             
             
             
-            list=zeros(obj.hilbDim*len,3);
+            list=zeros(obj.hilb_dim*len,3);
             iter=1;
-            for ii=1:obj.hilbDim
+            for ii=1:obj.hilb_dim
                 v=perms(obj.siteOccupationList(ii,:));
                 li=unique((sum(posm.*(v-1),2)+1)');
                 fac=nnz(li);
@@ -147,7 +146,7 @@ classdef BHsystem < Latticesystem
             end
             list=list(1:iter-1,:);
             sym=sparse(list(:,1),list(:,2),list(:,3),...
-            obj.hilbDim,obj.nSites^obj.nParticles);
+            obj.hilb_dim,obj.nSites^obj.nParticles);
          end
                    
         function list = MakeSiteOccupationList(obj,varargin)
@@ -163,7 +162,7 @@ classdef BHsystem < Latticesystem
          d=obj.nSites;
         
              %initilize the list to zero.
-             list = zeros(obj.hilbDim,N);
+             list = zeros(obj.hilb_dim,N);
              ii=1;
              function reclist(nn,dd,config,limit)
                 if nn == 0
@@ -198,9 +197,9 @@ classdef BHsystem < Latticesystem
             end
             
             
-        m=zeros(obj.hilbDim,1);
+        m=zeros(obj.hilb_dim,1);
         
-        for ii=1:obj.hilbDim
+        for ii=1:obj.hilb_dim
              y=sort(obj.siteOccupationList(ii,:));
              v=histc(obj.siteOccupationList(ii,:),y);
             
@@ -214,7 +213,7 @@ classdef BHsystem < Latticesystem
         end
         
         [row, ~, val] = find(m);
-        m=sparse(row,row,val,obj.hilbDim,obj.hilbDim);
+        m=sparse(row,row,val,obj.hilb_dim,obj.hilb_dim);
         end
 
         function [mx my mtx mty] = MakeAdjacencyMatricies(obj)
@@ -289,14 +288,11 @@ classdef BHsystem < Latticesystem
                 end
             end
 
-            Z = reshape(...
-                obj.sitePositions(obj.siteOccupationList',1)+...
-                obj.sitePositions(obj.siteOccupationList',2)*1i,...
-                np,obj.hilbDim).';
+            Z = obj.coordinates();
             
             lattice_dims = obj.lattice_dim;
             
-            psiL = zeros(obj.hilbDim,2);
+            psiL = zeros(obj.hilb_dim,2);
             wf = Wavefunctions(wf_type);
             
             psiL(:,1) = facs.*wf(Z,lattice_dims,1,twist);

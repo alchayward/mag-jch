@@ -308,6 +308,12 @@ function filePath = GenerateFilePath(p)
     fileName=p.GenerateFileName;
     filePath=fullfile(p.sysPath,fileName);
 end
+function Z = coordinates(obj)
+Z = reshape(...
+       obj.sitePositions(obj.siteOccupationList(:,1:np)',1)+...
+       obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
+       np,obj.hilb_dim).';
+end
 end %methods    
 end %classdef
 
