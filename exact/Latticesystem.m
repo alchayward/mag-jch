@@ -25,6 +25,8 @@ classdef Latticesystem
     pot=0;
     maxParticlesPerSite = 1;
     sysPath = './'
+    V;
+    D;
     
     %Lattice Properties
 
