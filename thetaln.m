@@ -1,7 +1,7 @@
 function f = thetaln(z,tau,varargin)
 % Maps the genrealized Jacobi elliptical theta function to theta3. Returns
 % the log of theta[a,b](z|tau)
-iter_lim = 7;
+iter_lim = 7; % Controls error on the function. Will work fine for most cases, but is inefficient.
 
 if nargin == 3 %take in a standard elliptic theta (1,2,3,4)
     switch varargin{1}
@@ -27,13 +27,20 @@ elseif nargin == 4
     b = varargin{2};
 end
     
+% Translate to the first lattice square (0,0),(1,1), which makes convergence much better(predicatable). 
 a0 = mod(a,1);
 z1=z+b+a0*tau;
-f_mod = 1i*pi*(tau*a0^2+2*a0*(z+b));
+f_mod = 1i*pi*(tau*a0^2+2*a0*(z+b)); 
+
+%%%
+%%% I have put the code from theta3_ln in here, because matlab has terrible 
+%%% function calling overhead, and I need to call this a lot. 
+%%%
 
 %remove periodic elements so that z lies in the (0,0) to (1,tau) reigion.
 %This makes gaurentees about convergence better. Assuming tau = 1 means
-%iter_lim = 7 is very well converged.
+%iter_lim = 7 is very well converged. Not true for 'extreme' values of tau
+
 n = floor(imag(z1)./imag(tau));
 z2 = z1 - n*tau;
 m = floor(real(z2));
