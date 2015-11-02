@@ -588,25 +588,38 @@ V0 = opts.V0;
 
 if strcmp(method,'eigs')
     aOpts = struct('V0',V0,'tol',tol);
-    [V, D, flag] = eigs(H,nLevels,'SR');
-    D=diag(D);
-    
+    try
+        [V, D, flag] = eigs(H,nLevels,'SR',aOpts);
+        D=diag(D);
+    catch ME
+       disp('eigs failed to converge, trying another');
+       new_opts = opts;
+       new_opts.method = 'lobpcg';
+       [V, D, flag] = Groundstate(H,new_opts,varargin);
+    end
+       
 elseif strcmp(method,'lobpcg')
     flag = 1;
     eigTries = 0;
     failureFlag = 1;
-    while failureFlag == 1 || eigTries < nIterations  
+    while failureFlag == 1 && eigTries < nIterations  
         [V0, D, flag]=lobpcg(V0,H);
+        failureFlag=flag;
         eigTries = eigTries +1;
     end
+V = V0;
 elseif strcmp(method,'arnoldi') 
         aOpts=struct('nLevels',k,'nIterations',50,'offSet',offSet);
         [V, D, flag] = ArnoldiVectors(h,aOpts);
 elseif strcmp(method,'mix')
 end
+V = GramSchmit(V);
 D=D-offset;
 %%% sort out some flag stuff (failure to converge, ect.)
 
+%%% Sort Eigenvectors into order (sometimes they are not in order)
+[D,order] = sort(D,'ascend');
+V = V(:,order);
 end
 
 function sys = GetSys(systemParameters)

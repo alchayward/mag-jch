@@ -22,6 +22,9 @@ h.landau_level_ln = @landau_level_ln;
 h.Laughlin = @Laughlin;
 h.test_boundary_conditions = @test_boundary_conditions;
 h.Subspace = @Subspace;
+h.wavefunction_overlap = @wavefunction_overlap;
+h.subspace_projection = @subspace_projection;
+
 elseif nargin == 1
     wf_type = varargin{1};
     switch wf_type
@@ -343,4 +346,18 @@ function err = test_boundary_conditions(...
    zy(1) = zy(1) + tau*Lx;
    
    err = [wf(zx)/(wf0*Sx),wf(zy)/(wf0*Sy)];
+end
+
+function overlap = wavefunction_overlap(Psi, Phi)
+%wavefunction_overap. returns the projection of Psi onto Phi.
+%   Detailed explanation goes here
+overlap = Psi'*Phi;
+end
+
+function projection = subspace_projection( S, Psi)
+%UNTITLED2 Summary of this function goes here
+%   Detailed explanation goes here
+
+projection = Psi*wavefunction_overlap(Psi,S);
+
 end

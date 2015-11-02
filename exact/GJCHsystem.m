@@ -339,13 +339,17 @@ classdef GJCHsystem < Latticesystem
                 end
             end
             facs = obj.atomic_state_factor(1:obj.hilb_dim,params);
-            Z = coordinates();
+            np = obj.nParticles;
+            Z = reshape(...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',1)+...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
+                np,obj.hilb_dim).';
             lattice_dims = obj.lattice_dim;
             
             wf = Wavefunctions();
-	    PsiL = wf.Subspace('pfaffian',Z,lattice_dims,twist);
+            PsiL = wf.Subspace('pfaffian',Z,lattice_dims,twist);
             dim_Psi = size(PsiL,2);
-            PsiL = PsiL.*(ones(dim_Psi,1)*facs);
+            PsiL = PsiL.*(facs*ones(1,dim_Psi));
             h = HubbardLibrary();
             PsiL = h.GramSchmit(PsiL);
         end
@@ -391,7 +395,7 @@ classdef GJCHsystem < Latticesystem
            for ii =1:obj.hilb_dim
            plist(ii)=nnz(obj.siteOccupationList(atoms(ii,:)));
            end
-           [ind val] = find(plist);
+           [ind,val] = find(plist);
            w=sparse(ind,ind,val,obj.hilb_dim,obj.hilb_dim);
      end     
      

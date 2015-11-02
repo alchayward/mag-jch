@@ -1,8 +1,8 @@
-
+function s = new_three_level_jch_pfaff(lattice_dim,)
 p = struct(); %parameters structers
 p.lattice_dim = [6 6];
 p.model = 'BH';
-p.maxParticlesPerSite = 4;
+p.maxParticlesPerSite = 2;
 p.nParticles = 4;
 p.nAtoms=1;
 p.alpha = [4 36];
@@ -26,5 +26,5 @@ p.atomLevels = 3;
 %    'A',[-1,0],'sysPath',sysPath);
     
 h=HubbardLibrary;
-s2=h.Lattice(p);
-s2 = s2.Initilize();
+s3=h.Lattice(p);
+s3 = s3.Initilize();

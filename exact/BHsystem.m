@@ -294,6 +294,7 @@ classdef BHsystem < Latticesystem
             
             psiL = zeros(obj.hilb_dim,2);
             wf = Wavefunctions(wf_type);
+            facs = 1;
             
             psiL(:,1) = facs.*wf(Z,lattice_dims,1,twist);
             psiL(:,2) = facs.*wf(Z,lattice_dims,2,twist);
