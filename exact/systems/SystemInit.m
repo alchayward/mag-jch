@@ -1,0 +1,20 @@
+function s = new_three_level_jch_pfaff(lattice_dim,)
+p = struct(); %parameters structers
+p.lattice_dim = [6 6];
+p.model = 'BH';
+p.maxParticlesPerSite = 2;
+p.nParticles = 4;
+p.nAtoms=1;
+p.alpha = [4 36];
+p.onsiteStrength = [0,0,10,0];
+%p.onsiteStrength = [1,sqrt(2),-5,-10];
+p.hoppingStrength = 1;
+p.ddStrength = 0;
+p.twist = [0 0];
+p.A = [-1 0];
+p.sysPath = './systems/';
+p.atomLevels = 3;
+
+h=HubbardLibrary;
+s3=h.Lattice(p);
+s3 = s3.Initilize();

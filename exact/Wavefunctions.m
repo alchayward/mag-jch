@@ -1,7 +1,8 @@
 function h = Wavefunctions(varargin)
 %HubbardLibrary: Library of functions for Hubbard Model Calculation
 %   Functions: Chern(systemParameters, chernParameters)
-%              
+%         
+
 
 if nargin == 0
 h.Pfaffian_L = @Pfaffian_L;
@@ -36,12 +37,13 @@ elseif nargin == 1
 end
 end
 
+
 function Psi = Subspace(wf_type,Z,lattice_dims,varargin)
 
-	params = struct();
-	if nargin > 3
-		params = varargin{1};
-	end
+% 	params = struct();
+% 	if nargin > 3
+% 		params = varargin{1};
+% 	end
 
     switch wf_type
         case 'laughlin'
@@ -62,17 +64,17 @@ end
        
 function F = pfaffian_rel_ln(Z,Lx,tau,l,q)
 n_particles = size(Z,2);
-
-th_1_func = @(z)thetaln(z/Lx,tau,1);
+ml=MagneticLattice();
+th_1_func = @(z)ml.thetaln(z/Lx,tau,1);
 if l == 0
     %theta_2
-    th_a_func = @(z)thetaln(z/Lx,tau,2);
+    th_a_func = @(z)ml.thetaln(z/Lx,tau,2);
 elseif l == 1
     %theta_3
-    th_a_func = @(z)thetaln(z/Lx,tau,3);
+    th_a_func = @(z)ml.thetaln(z/Lx,tau,3);
 elseif l == 2
     %theta_4
-    th_a_func = @(z)thetaln(z/Lx,tau,4);
+    th_a_func = @(z)ml.thetaln(z/Lx,tau,4);
 end
 
 
@@ -163,6 +165,7 @@ function ind = pair_ind(pair,pair_list)
 end
 
 function F_rel_ln = laughlin_rel_ln(Z,Lx,tau,q)
+ml=MagneticLattice();
 n_particles = size(Z,2);
 pairings = laughlin_pairs(n_particles);
 n_pairings = size(pairings,1);
@@ -171,7 +174,7 @@ hilb_dim = size(Z,1);
 
 F_rel_ln = zeros(hilb_dim,1);
 for ii = 1:n_pairings
-    F_rel_ln = F_rel_ln + q*thetaln(Z_diffs(:,ii)/Lx,tau,1);
+    F_rel_ln = F_rel_ln + q*ml.thetaln(Z_diffs(:,ii)/Lx,tau,1);
 end
 
 end
@@ -236,10 +239,11 @@ end
 
 function F_com = centre_of_mass_ln(Z,lattice_dims,n_flux,twist,l,tau)
     %pass the Z = sum(z1,z2,...znp) as Z
+    ml=MagneticLattice();
     Lx = lattice_dims(1);
     n_particles = size(Z,2);
     q = find_degeneracy(n_particles,n_flux); 
-    F_com = thetaln(q*sum(Z,2)/Lx,q*tau,...
+    F_com = ml.thetaln(q*sum(Z,2)/Lx,q*tau,...
         l/q + (n_flux-q)/(2*q)+twist(1)/(2*pi*q),...
         -(n_flux-q)/2-twist(2)/(2*pi));
 end
