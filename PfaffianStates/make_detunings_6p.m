@@ -1,0 +1,6 @@
+nParticles=6;
+de_confs = Generate_Pfaffian_Detuning_Configs(...
+    -20:1:20,cellfun(@(ld)new_lattice_config(ld,nParticles),...
+    {[4,4]},'UniformOutput',0));
+confs = Get_Config_Data(de_confs);
+save('detuning_data_6p.mat','confs');
