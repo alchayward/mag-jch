@@ -1,4 +1,5 @@
-delta = -5;
+addpath('../exact/','../exact/systems')
+delta = -20;
 beta_confs = Generate_Pfaffian_beta2_Configs(...
     0:.1:2,cellfun(@(ld)new_lattice_config(ld,4),...
     {[4,4],[4,5],[5,5],[5,6],[6,6]},'UniformOutput',0),delta);
