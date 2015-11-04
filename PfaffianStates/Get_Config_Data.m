@@ -21,7 +21,7 @@ for ii=1:length(lattice_configs)
     lc.s = pf.new_jch_system(lc.lattice_dims,lc.nParticles,...
        0,sqrt(2)); %Make our lattice system
     lc.done = true;
-    put_in_cache(system_cache_file,lc,field_compare_list);
+    cache.put_in_cache(lc);
     end
     
     
