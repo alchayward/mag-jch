@@ -85,7 +85,7 @@ classdef GJCHsystem < Latticesystem
          np=obj.nParticles;
          n_sites=obj.nSites;
          at0=obj.atomLevels-1;
-         global LIST
+         global LIST %#ok<REDEF>
          LIST = zeros(obj.hilb_dim,2*np);
          global II
          II=1;
@@ -189,7 +189,7 @@ classdef GJCHsystem < Latticesystem
             
         a = sparse(kron(eye(obj.nSites),[0,0;1,0]));
         jc=obj.MakeNParticleMatrix(a);
-        [row col val] = find(jc);
+        [row, col, val] = find(jc);
         jclist = zeros(length(row),3);
         N=obj.nParticles;
         atoms = N+1:2*N;
@@ -219,9 +219,9 @@ classdef GJCHsystem < Latticesystem
         jc = (jc+jc')/sqrt(level);
         end
               
-        function [tx ty ] = twist(obj,tangle) %Why?
+        function [tx,ty ] = twist(obj,tangle) %Why?
             obj.tangle=tangle;
-            [tx ty] = obj.MakeTwistMatricies;
+            [tx,ty] = obj.MakeTwistMatricies;
         end
 
         function li =SingleParticleIndicies(obj,ind)
@@ -252,13 +252,13 @@ classdef GJCHsystem < Latticesystem
             end
         end
           
-        function [mx my mtx mty] = MakeAdjacencyMatricies(obj)
+        function [mx,my,mtx,mty] = MakeAdjacencyMatricies(obj)
         
             b=[1,0;0,0];
              switch obj.topology
                 case 'torus'
-                    [ mx my ] = obj.MakeHardAdjacencyMatrices;
-                    [ mtx mty ] = obj.MakeWrapAdjacencyMatrices;
+                    [ mx, my ] = obj.MakeHardAdjacencyMatrices;
+                    [ mtx, mty ] = obj.MakeWrapAdjacencyMatrices;
                     mx=kron(mx,b);
                     my=kron(my,b);
                     mtx=kron(mtx,b);
@@ -381,7 +381,7 @@ classdef GJCHsystem < Latticesystem
         
         function e = E0est(obj)
         
-         [p q] = rat(obj.alpha);
+         [p, q] = rat(obj.alpha);
          hop=obj.hoppingstrength*HarperMin(q,p);
          e=obj.nParticles*jchhe(1,1,obj.onsitestrength(2),hop,-1);
      end
@@ -413,8 +413,8 @@ classdef GJCHsystem < Latticesystem
      
      function d = MakeDipoleMatrix(obj)
 
-         [ mx my ] = obj.MakeHardAdjacencyMatrices;
-         [ mtx mty ] = obj.MakeWrapAdjacencyMatrices;
+         [ mx, my ] = obj.MakeHardAdjacencyMatrices;
+         [ mtx, mty ] = obj.MakeWrapAdjacencyMatrices;
          aMat = mx + my + mtx + mty;
          aMat=aMat + aMat' - 2*diag(diag(aMat));
          
