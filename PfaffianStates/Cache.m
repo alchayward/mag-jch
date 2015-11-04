@@ -14,7 +14,9 @@ methods
 function items = get_from_cache(c,items)
 %want to make it so we can pass a cell array. make code so it can take
 %a cell array, then jsut wrap a single struct in a cell.
+struct_flag=0;
 if isstruct(items)
+    struct_flag=1;
     items = {items};
 end
 
@@ -25,6 +27,10 @@ for ii = 1:length(items)
     if ind ~= 0
         items{ii} = cache{ind};
     end
+end
+%if it was a struct, then jsut return the struct:
+if struct_flag
+    items = items{1};
 end
 end
 

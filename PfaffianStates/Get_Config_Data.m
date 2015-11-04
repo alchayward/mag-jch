@@ -10,11 +10,13 @@ cache = Cache(system_cache_file,field_compare_list);
 %sort into lattice configs.
 %First number of particles.
 lattice_configs = unique_lattice_configs(configs);
-lattice_configs = cache.get_from_cache(lattice_configs);
+%lattice_configs = cache.get_from_cache(lattice_configs);
+%%% This loads all the matricies into memory at once. pretty bad idea...
+%%% Instead, just do it one at a time.
 
 new_configs={};
 for ii=1:length(lattice_configs)
-    lc = lattice_configs{ii};
+    lc = cache.get_from_cache(lattice_configs{ii});
     if ~lc.done
     lc.s = pf.new_jch_system(lc.lattice_dims,lc.nParticles,...
        0,sqrt(2)); %Make our lattice system
