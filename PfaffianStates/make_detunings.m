@@ -1,4 +1,4 @@
-detunings = linspace(-10,10,40);
+detunings = -10:0.5:10;
 lattice = [4,4]; 
 nParticles = 4;
 addpath('../exact/','../exact/systems')
