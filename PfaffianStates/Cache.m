@@ -40,9 +40,10 @@ function put_in_cache(c,items)
 if isstruct(items)
     items = {items};
 end
+cache = c.load_cache(c.file);
 for ii = 1:length(items)
 item = items{ii};
-cache = c.load_cache(c.file);
+
 ind = c.in_cache(item,cache,c.field_list);
 if ind == 0
     cache{end+1} = item; %#ok<AGROW,NASGU>
