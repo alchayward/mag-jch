@@ -28,3 +28,5 @@ h=HubbardLibrary;
 s=h.Lattice(p);
 s=s.Initilize();
 end
+
+

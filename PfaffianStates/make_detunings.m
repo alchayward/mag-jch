@@ -1,6 +1,10 @@
+detunings = linspace(-10,10,40);
+lattice = [4,4]; 
+nParticles = 4;
 addpath('../exact/','../exact/systems')
 de_confs = Generate_Pfaffian_Detuning_Configs(...
-    -20:1:20,cellfun(@(ld)new_lattice_config(ld,4),...
-    {[4,4],[4,5],[5,5],[5,6],[6,6]},'UniformOutput',0));
+    detunings,cellfun(@(ld)new_lattice_config(ld,nParticles),...
+    {lattice},'UniformOutput',0));
 confs = Get_Config_Data(de_confs);
-save('detuning_data','confs');
+filename = ['delta_data', arrayfun(@(x)num2str(x),[lattice(1),lattice(2),nParticles])];
+save(filename,'confs');
