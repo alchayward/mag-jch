@@ -1,5 +1,4 @@
 function configs = Generate_Pfaffian_Detuning_Configs(detunings,lattice_configs)
-beta_2=sqrt(2);
 beta = 1;
 kappa=1;
 
@@ -14,7 +13,6 @@ for ii = 1:length(lattice_configs)
        dat.lattice_dims = lc.lattice_dims;
        dat.nParticles = lc.nParticles;
        dat.delta = detunings(jj);
-       dat.beta_2 = beta_2;
        dat.kappa = kappa;
        dat.beta = beta;
        dat.done=false;
