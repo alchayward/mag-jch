@@ -355,6 +355,32 @@ classdef GJCHsystem < Latticesystem
             PsiL = h.GramSchmit(PsiL);
         end
         
+        function PsiL = LaughlinState(obj,varargin)
+            
+            params = struct();
+            twist = obj.tangle;
+            if nargin > 1
+                params = varargin{1};
+                if isfield(params,'twist')
+                    twist = params.twist;
+                end
+            end
+            facs = obj.atomic_state_factor(1:obj.hilb_dim,params);
+            np = obj.nParticles;
+            Z = reshape(...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',1)+...
+                obj.sitePositions(obj.siteOccupationList(:,1:np)',2)*1i,...
+                np,obj.hilb_dim).';
+            lattice_dims = obj.lattice_dim;
+            
+            wf = Wavefunctions();
+            PsiL = wf.Subspace('laughlin',Z,lattice_dims,twist);
+            dim_Psi = size(PsiL,2);
+            PsiL = PsiL.*(facs*ones(1,dim_Psi));
+            h = HubbardLibrary();
+            PsiL = h.GramSchmit(PsiL);
+        end
+        
         function pro = PNProjector(obj,pn)
 	%Not sure what this does now either
            p=obj.nParticles;
