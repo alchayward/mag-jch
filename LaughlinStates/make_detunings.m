@@ -1,8 +1,8 @@
-detunings = -10:0.5:10;
+detunings = -10:1:10;
 lattice = [4,4]; 
-nParticles = 4;
+nParticles = 2;
 addpath('../exact/','../exact/systems')
-de_confs = Generate_Pfaffian_Detuning_Configs(...
+de_confs = Generate_Laughlin_Detuning_Configs(...
     detunings,cellfun(@(ld)new_lattice_config(ld,nParticles),...
     {lattice},'UniformOutput',0));
 confs = Get_Config_Data(de_confs);

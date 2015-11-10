@@ -19,7 +19,7 @@ for ii=1:length(lattice_configs)
     lc = cache.get_from_cache(lattice_configs{ii});
     if ~lc.done
     lc.s = lf.new_jch_system(lc.lattice_dims,lc.nParticles,...
-       0,sqrt(2)); %Make our lattice system
+       0); %Make our lattice system
     lc.done = true;
     cache.put_in_cache(lc);
     end
@@ -85,7 +85,7 @@ cache_file = opts.cache_file;
 
 %libraries
 hub = HubbardLibrary();
-lf = Pfaffians();
+lf = Laughlins();
 wf = Wavefunctions();
 
 field_compare_list = {'lattice_dims','nParticles',...
@@ -100,7 +100,7 @@ end
    GSopts = struct('nLevels',nLevels,'V0',rand(s.hilb_dim,nLevels),...
        'method','eigs');
    jchlaughlin= s.LaughlinState(struct('delta',configs{1}.delta));
-   GSopts.V0(:,1:3) = jchlaughlin; %Use laughlin as inital guess.
+   GSopts.V0(:,1:2) = jchlaughlin; %Use laughlin as inital guess.
    new_configs=configs;
    for ii = 1:length(configs)
        c = configs{ii};
@@ -112,7 +112,7 @@ end
            disp('finding groundstate of:')
            disp(c);
            h = lf.make_jch_ham_params(s,c.kappa,c.delta);
-           jchlaughlin = s.PfaffianState(c);
+           jchlaughlin = s.LaughlinState(c);
             
            [V,D,~] = hub.Groundstate(h,GSopts); %find_wavefunction(parameters)
            GSopts.V0 = V; %Use solution as next inital guess.

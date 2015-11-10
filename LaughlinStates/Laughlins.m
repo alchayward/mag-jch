@@ -1,4 +1,4 @@
-function p = Pfaffians()
+function p = Laughlins()
     p.new_jch_system = @new_jch_system;
     p.make_jch_ham_params = @make_jch_ham_params;
     
@@ -14,7 +14,7 @@ p.model = 'GJCH';
 p.maxParticlesPerSite = nParticles;
 p.nParticles = nParticles;
 p.nAtoms=1;
-p.alpha = [nParticles 2*prod(lattice_dim)];
+p.alpha = [2*nParticles, prod(lattice_dim)];
 p.onsiteStrength = [1,detuning];
 p.hoppingStrength = 1;
 p.ddStrength = 0;
