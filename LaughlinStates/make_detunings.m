@@ -1,5 +1,9 @@
-detunings = -10:1:10;
-lattice = [4,4]; 
+lattice_confs = [4,4;4,5;5,5;5,6;6,6];
+particles = [2,3,4];
+
+
+detunings = -10:.1:10;
+lattice = [6,6]; 
 nParticles = 2;
 addpath('../exact/','../exact/systems')
 de_confs = Generate_Laughlin_Detuning_Configs(...

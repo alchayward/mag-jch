@@ -1,32 +1,32 @@
 % Set up and run a Chern Number calculation
 
 
-latticeDim = [5 4];
-model = 'GJCH';
+lattice_dims = [6 6];
+model = 'JCH';
 maxParticlesPerSite = 4;
 nParticles = 4;
 nAtoms=1;
-alpha = [1,5];
-onsiteStrength = 10*[1,sqrt(2),0,0]; 
+alpha = [8,36];
+onsiteStrength = [1,0]; 
 hoppingStrength = 1;
 ddStrength=0;
 twist = [0 0];
 A = [-1 0];
 sysPath = './systems/';
-atomLevels = 3;
+atomLevels = 2;
 
 
 
 
-degeneracy = 3;
+degeneracy = 2;
 nLevels = 3; %total levels = degen X nLevels
 
 
 gridDims = [30 30];
 
 
-fileName = 'B10D0v2.mat';
-filePath = './saves/GJCH5x4p4Pfaff/';
+fileName = 'D0.mat';
+filePath = './saves/JCH6x6p4Laughlin/';
 offSet = -20;
 
 resume = 0;
@@ -35,7 +35,7 @@ system(sprintf('mkdir %s',filePath));
 system(sprintf('cp ./ChernScript.m %sChernScript.m',filePath));
 
 
-sysParams=struct('model',model,'dim',latticeDim,'nParticles',nParticles,...
+sysParams=struct('model',model,'lattice_dim',lattice_dims,'nParticles',nParticles,...
     'maxParticlesPerSite',maxParticlesPerSite,'nAtoms',nAtoms,...
     'atomLevels',atomLevels,'alpha',alpha, ...
     'onsiteStrength',onsiteStrength,...

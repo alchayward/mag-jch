@@ -22,8 +22,8 @@ err_mat = psi*0;
 
 
 jcmf = meanfield_lattice_init(lattice_dims,alpha);
-matlabpool(4) %parallel is not working on my comp right now.
-parfor ii = 1:length(mu_list)
+%matlabpool(2) %parallel is not working on my comp right now.
+for ii = 1:length(mu_list)
     mu = mu_list(ii);
     jc = meanfield_onsite_init(mu,delta);
     fprintf('mu = %d\n',mu)
@@ -33,6 +33,6 @@ parfor ii = 1:length(mu_list)
     
     
 end
-matlabpool close
+%matlabpool close
 end
 

@@ -14,11 +14,12 @@ classdef jchmf
     methods
    
     function obj = jchmf(para)
+        ml = MagneticLattice();
         obj.lattice_dims = para.lattice_dims;
         obj.alpha = para.alpha(1)/para.alpha(2);
         obj.n_sites=prod(obj.lattice_dims);
         [obj.amat,obj.coords] =...
-            magnetic_lattice_hamiltonian(obj.lattice_dims,obj.alpha);
+            ml.magnetic_lattice_hamiltonian(obj.lattice_dims,obj.alpha);
         obj.psi0 = obj.MakePsi0();
     end
         
